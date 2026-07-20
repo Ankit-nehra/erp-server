@@ -1,0 +1,223 @@
+1) sessions
+
+| Column       | Type       | Key | Description    |
+
+| ------------ | ---------- | --- | -------------- |
+
+| id           | bigint/int | PK  | Session ID     |
+
+| session_name | varchar    |  isunique   | 2026-27        | 
+
+| start_date   | date       |     | Session Start  |
+
+| end_date     | date       |     | Session End    |
+
+| is_active    | boolean    |     | Active Session |
+
+
+
+2) classes
+
+| Column     | Type       | Key |
+
+| ---------- | ---------- | --- |
+
+| id         | bigint/int | PK  |
+
+| class_name | varchar    |isunique     | 
+
+
+
+3)sections
+
+| Column       | Type       | Key |
+
+| ------------ | ---------- | --- |
+
+| id           | bigint/int | PK  |
+
+| section_name | varchar    |    isunique | 
+
+
+
+4)subjects
+
+| Column       | Type       | Key |
+
+| ------------ | ---------- | --- |
+
+| id           | bigint/int | PK  |
+
+| subject_name | varchar    |     |
+
+| subject_code | varchar    |  isuniquw and isnullable   | 
+
+
+
+5)teachersLogin
+
+| Column         | Type       | Key    |
+
+| -------------- | ---------- | ------ |
+
+| id             | bigint/int | PK     |
+
+| teacher_number | varchar    | UNIQUE |
+
+| password       | varchar    |        |
+
+| ...            |            |        |
+
+
+
+6)studentsLogin
+
+| Column           | Type       | Key    |
+
+| ---------------- | ---------- | ------ |
+
+| id               | bigint/int | PK     |
+
+| admission_number | varchar    | UNIQUE |
+
+| password         | varchar    |        |
+
+| ...              |            |        |
+
+
+
+7)Student_Profiles
+| Column            | Type        | Key                                         |
+| ----------------- | ----------- | ------------------------------------------- |
+| id                | bigint/int  | PK                                          |
+| admission_number  | varchar     | FK → studentsLogin.admission_number, UNIQUE |
+| student_name      | varchar     |                                             |
+| roll_number       | int         |                                             |
+| class_name        | bigint/int  | FK → classes.class_name                     |
+| section           | bigint/int  | FK → sections.section_name                  |
+| session           | varchar     | FK → sessions.section_name                  |
+| profile_photo     | text        |                                             |
+| created_at        | timestamp   |                                             |
+| gender            | varchar     |                                             |
+| date_of_birth     | date        |                                             |
+| blood_group       | varchar     |                                             |
+| father_name       | varchar     |                                             |
+| father_mobile     | varchar     |                                             |
+| father_occupation | varchar     |                                             |
+| mother_name       | varchar     |                                             |
+| mother_mobile     | varchar     |                                             |
+| mother_occupation | varchar     |                                             |
+| email             | varchar     |                                             |
+| address           | text        |                                             |
+| city              | varchar     |                                             |
+| state             | varchar     |                                             |
+| pincode           | varchar/int |                                             |
+| aadhar_number     | varchar     | UNIQUE (Recommended)                        |
+| transport         | boolean     |                                             |
+| hostel            | boolean     |                                             |
+
+
+
+
+8)teacher_profiles
+
+| Column           | Type       | Key                                 |
+
+| ---------------- | ---------- | ----------------------------------- |
+
+| id               | int        | PK                                  |
+
+| teacher_number   | varchar    | FK → teachersLogin.teacher_number,usique |
+
+| teacher_name     | varchar    |                                     |
+
+| deignation       | varchar    |                                     |
+
+| qualification    | varchar    | FK → classes.class_name             |
+
+| session          | varchar    | FK → sessions.section_name          |
+
+| profile_photo    | text       |                                     | 
+
+
+
+9)classSectionSubjectMapping
+
+| Column     | Type       | Key |
+
+| ---------- | ---------- | --- |
+
+| id         | bigint/int | PK  |
+
+| class_id   | bigint/int | FK ->classes.id |
+
+| section_id | bigint/int | FK  ->sections.id|
+
+| subject_id | bigint/int | FK  ->subjects.id|
+
+
+
+10)teacherAsignedClass
+
+| Column           | Type       | Key                                 |
+
+| ---------------- | ---------- | ----------------------------------- |
+
+| id               | int        | PK                                  |
+
+| teacher_number   | varchar    | FK → teachersLogin.teacher_number   |
+
+| class_id         | int        | fk-> classes.id                     |
+
+| section_id       | int        |  fk->sections.id                    |
+
+| subject_id       | int        | FK → subjects.id                    |
+
+| session_id       | int        | FK → sessions.id                    |
+
+
+
+11)attendance
+
+| Column          | Type       | Key |
+
+| --------------- | ---------- | --- |
+
+| id              | bigint/int | PK  |
+
+| session_id      | bigint/int | FK -> classes.id  |
+
+| class_id        | bigint/int | FK -> classes.id|
+
+| section_id      | bigint/int | FK  ->sections.id |
+
+| subject_id      | bigint/int | FK → subjects.id  |
+
+| teacher_number  | varchar    | FK ->teacher_profiles.teacher_number|
+
+| attendance_date | date       |     |
+
+| period_number   | int        |     |
+
+| created_at      | timestamp  |     |
+
+
+
+ 12)attendance_detail
+
+| Column           | Type         | Key                                 |
+
+| ---------------- | ------------ | ----------------------------------- |
+
+| id               | bigint/int   | PK                                  |
+
+| attendance_id    | bigint/int   | FK → attendance.id                  |
+
+| admission_number | varchar      | FK → student_profiles.admission_number |
+
+| status           | enum/varchar | Present/Absent/Leave                |
+
+| created_at       | timestamp    |                                     |
+
+
+

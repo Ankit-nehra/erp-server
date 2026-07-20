@@ -1,0 +1,6 @@
+CREATE TABLE schoolSessions (
+    id SERIAL PRIMARY KEY,
+    session_name VARCHAR(20) UNIQUE NOT NULL,
+    is_active BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

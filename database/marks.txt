@@ -1,0 +1,218 @@
+1. exam_types Table
+
+CREATE TABLE "exam_types" (
+
+    id BIGSERIAL PRIMARY KEY,
+
+    exam_name VARCHAR(100) NOT NULL UNIQUE,
+
+    display_order INT DEFAULT 1,
+
+    is_active BOOLEAN DEFAULT TRUE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
+
+2. marks Table
+
+CREATE TABLE "marks" (
+
+    id BIGSERIAL PRIMARY KEY,
+
+    session_id BIGINT NOT NULL,
+
+    class_id BIGINT NOT NULL,
+
+    section_id BIGINT NOT NULL,
+
+    subject_id BIGINT NOT NULL,
+
+    exam_type_id BIGINT NOT NULL,
+
+    teacher_number VARCHAR NOT NULL,
+
+    test_name VARCHAR(150) NOT NULL,
+
+    exam_date DATE NOT NULL,
+
+    maximum_marks NUMERIC(6,2) NOT NULL,
+
+    passing_marks NUMERIC(6,2) NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_marks_session
+        FOREIGN KEY (session_id)
+        REFERENCES "sessions"(id),
+
+    CONSTRAINT fk_marks_class
+        FOREIGN KEY (class_id)
+        REFERENCES classes(id),
+
+    CONSTRAINT fk_marks_section
+        FOREIGN KEY (section_id)
+        REFERENCES sections(id),
+
+    CONSTRAINT fk_marks_subject
+        FOREIGN KEY (subject_id)
+        REFERENCES subjects(id),
+
+    CONSTRAINT fk_marks_exam_type
+        FOREIGN KEY (exam_type_id)
+        REFERENCES "exam_types"(id),
+
+    CONSTRAINT fk_marks_teacher
+        FOREIGN KEY (teacher_number)
+        REFERENCES "teacher_profiles"(teacher_number),
+
+    CONSTRAINT uq_marks UNIQUE
+    (
+        session_id,
+        class_id,
+        section_id,
+        subject_id,
+        exam_type_id,
+        test_name,
+        exam_date
+    )
+
+);
+
+3. marks_detail Table
+
+CREATE TABLE "marks_detail" (
+
+    id BIGSERIAL PRIMARY KEY,
+
+    marks_id BIGINT NOT NULL,
+
+    admission_number VARCHAR NOT NULL,
+
+    obtained_marks NUMERIC(6,2) NOT NULL,
+
+    remarks TEXT,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_marks_detail_marks
+        FOREIGN KEY (marks_id)
+        REFERENCES "marks"(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_marks_detail_student
+        FOREIGN KEY (admission_number)
+        REFERENCES "student_profiles"(admission_number)
+
+);
+
+
+notices table :- 
+CREATE TABLE notices
+(
+    id BIGSERIAL PRIMARY KEY,
+
+    session_id BIGINT NOT NULL,
+
+    class_id BIGINT NOT NULL,
+
+    section_id BIGINT NOT NULL,
+
+    teacher_number VARCHAR NOT NULL,
+
+    title VARCHAR(200) NOT NULL,
+
+    description TEXT NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_notice_session
+        FOREIGN KEY(session_id)
+        REFERENCES sessions(id),
+
+    CONSTRAINT fk_notice_class
+        FOREIGN KEY(class_id)
+        REFERENCES classes(id),
+
+    CONSTRAINT fk_notice_section
+        FOREIGN KEY(section_id)
+        REFERENCES sections(id),
+
+    CONSTRAINT fk_notice_teacher
+        FOREIGN KEY(teacher_number)
+        REFERENCES teacher_profiles(teacher_number)
+        ON DELETE CASCADE
+);
+
+
+periods table:
+
+CREATE TABLE "periods"
+(
+    id BIGSERIAL PRIMARY KEY,
+
+    period_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+timetable :
+
+CREATE TABLE "timetable"
+(
+    id BIGSERIAL PRIMARY KEY,
+
+    session_id BIGINT NOT NULL,
+
+    class_id BIGINT NOT NULL,
+
+    section_id BIGINT NOT NULL,
+
+    subject_id BIGINT NOT NULL,
+
+    teacher_number VARCHAR NOT NULL,
+
+    day_of_week SMALLINT NOT NULL,
+
+    period_id BIGINT NOT NULL,
+
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+
+    FOREIGN KEY(session_id)
+    REFERENCES sessions(id),
+
+    FOREIGN KEY(class_id)
+    REFERENCES classes(id),
+
+    FOREIGN KEY(section_id)
+    REFERENCES sections(id),
+
+    FOREIGN KEY(subject_id)
+    REFERENCES subjects(id),
+
+    FOREIGN KEY(teacher_number)
+    REFERENCES teacher_profiles(teacher_number),
+
+    FOREIGN KEY(period_id)
+    REFERENCES periods(id)
+);
+
+CREATE UNIQUE INDEX teacher_period_unique
+ON timetable
+(
+session_id,
+teacher_number,
+day_of_week,
+period_id
+);
+
+CREATE UNIQUE INDEX class_period_unique
+ON timetable
+(
+session_id,
+class_id,
+section_id,
+day_of_week,
+period_id
+);
